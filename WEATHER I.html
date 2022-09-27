@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+      
+        #container{
+            /* border: 1px solid red; */
+            width: 300px;
+            margin-left: 50px;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+            /* padding: 20px; */
+            /* padding-bottom: 10px; */
+            color: #585555;
+        }
+        #container > div > img{
+            width: 60px;
+            height: 50px;
+        }
+        #container > div{
+            display: flex;
+            align-items: center;
+            margin: 20px;
+        }
+        #container > div > p{
+          /* font-size: 20px; */
+          margin-left: 20px;
+          margin-bottom: 10px;
+          font-weight: 550;
+          
+          /* border: 1px solid red; */
+        }
+        #container >  h2{
+          /* margin-left: 50px; */
+          /* border: 1px solid red; */
+          text-align: center;
+        }
+        #head{
+            display: flex;
+            
+        }
+        #two{
+            margin: auto;
+        }
+        #insert{
+          display: flex;
+          margin: auto;
+          justify-content: center;
+          margin-bottom: 40px;
+          margin-top: 30px;
+        }
+        input{
+          margin-right: 20px;
+          width: 500px;
+          font-size: 20px;
+          background-color: rgb(179, 244, 222);
+          text-align: center;
+        }
+        #header{
+          text-align: center;
+          font-size: 40px;
+          color: rgb(16, 80, 154);
+        }
+        button{
+          font-size: 18px;
+          padding: 3px 15px;
+          background-color: teal;
+          color: white;
+          border: none;
+        }
+        #forcast{
+          display: grid;
+          grid-template-columns: repeat(7,1fr);
+          /* border: 1px solid red; */
+          width: 70%;
+          margin: auto;
+          text-align: center;
+          background-color: rgb(84, 84, 84);
+          color: white;
+          margin-top: 60px;
+          margin-bottom: 50px;
+        }
+        #forcast > div{
+          border: 1px solid #b4b4b4;
+        }
+        #forcast > div > img{
+          width: 70px;
+        }
+        #forcast > div > p{
+          font-size: 20px;
+          font-weight: 550;
+          margin-top: -7px;
+        }
+        #forcast > div > h2{
+          margin-bottom: 10px;
+        }
+        
+
+
+    </style>
+</head>
+<body onload="getlocation()">
+      <h1 id="header">Weather Status</h1>
+        <div id="insert">
+        <input type="text" id="query" placeholder="City Name">
+        <button onclick="getData()">Submit</button>
+      </div>
+    <div id="head">
+        <div id="one">
+        
+        <div id="container"></div>
+        </div>    
+
+        <div id="two">
+            <div class="mapouter">
+                <div class="gmap_canvas">
+                  <iframe
+                    width="800"
+                    height="600"
+                    id="gmap_canvas"
+                    
+                    frameborder="0"
+                    scrolling="no"
+                    marginheight="0"
+                    marginwidth="0"
+                  ></iframe
+                  ><a href="https://2piratebay.org">pirate bay</a><br /><style>
+                    .mapouter {
+                      position: relative;
+                      text-align: right;
+                      height: 600px;
+                      width: 800px;
+                    }</style
+                  ><a href="https://www.embedgooglemap.net"
+                    >interactive google map for website</a
+                  ><style>
+                    .gmap_canvas {
+                      overflow: hidden;
+                      background: none !important;
+                      height: 600px;
+                      width: 800px;
+                    }
+                  </style>
+                </div>
+              </div>
+        </div>
+    </div>
+
+    <div id="forcast"></div>
+
+</body>
+</html>
+
+<script>
+
+// let upto;
+   
+   function getData(){
+
+    let city = document.getElementById("query").value;
+
+    let url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=c7a9024c6b549ea766855f96c3bd4754`;
+
+    fetch(url)
+    .then(function(res){
+    // let data = res.json();
+    // console.log(data);
+    return res.json();
+    }).then(function(res){
+        console.log(res);
+        display(res);
+    })
+    .catch(function(err){
+        // console.log(err);
+        alert("Enter Valid Input.....");
+    })
+
+
+
+    let url2 = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=c7a9024c6b549ea766855f96c3bd4754`;
+
+    fetch(url2)
+    .then(function(res){
+    // console.log(res);
+    return res.json();
+    })
+    .then(function(res){
+       let upto = res.list;
+        // console.log(res.list)
+        forcast(upto);
+        
+    }).catch(function(err){
+      console.log(err);
+      alert("Technical Error....");
+    })
+
+   }
+
+   
+  
+
+
+   function display(data){
+
+    let url = src=`https://maps.google.com/maps?q=${data.name}&t=&z=13&ie=UTF8&iwloc=&output=embed`
+    let container = document.getElementById("container");
+    container.innerHTML = "";
+    
+
+    let name = document.createElement("h2");
+    name.innerText = data.name;
+    name.style.paddingTop = "15px";
+
+    let div1 = document.createElement("div");
+    let img1 = document.createElement("img");
+    img1.src = "https://thumbs.dreamstime.com/b/temperature-icon-vector-sign-symbol-isolated-white-background-logo-concept-your-web-mobile-app-design-134070287.jpg";
+    let temp = document.createElement("p")
+    let t1 = data.main.temp;
+    let s1 = t1 - 273.15;
+    temp.innerText = `Temperature : ${s1.toFixed(0)}`;
+    div1.append(temp,img1);
+
+    let div2 = document.createElement("div");
+    let img2 = document.createElement("img");
+    img2.src = "https://thumbs.dreamstime.com/b/temperature-icon-vector-sign-symbol-isolated-white-background-logo-concept-your-web-mobile-app-design-134070287.jpg";
+    let  min_temp= document.createElement("p");
+    let t2 = data.main.temp_min;
+    let s2 = t2 - 273.15;
+    min_temp.innerText = `Min-Temperature : ${s2.toFixed(0)}`;
+    div2.append(min_temp,img2);
+
+    let div3 = document.createElement("div");
+    let img3 = document.createElement("img");
+    img3.src = "https://thumbs.dreamstime.com/b/temperature-icon-vector-sign-symbol-isolated-white-background-logo-concept-your-web-mobile-app-design-134070287.jpg";
+    let  max_temp= document.createElement("p");
+    let t3 = data.main.temp_max;
+    let s3 = t3 - 273.15;
+    max_temp.innerText = `Max-Temperature : ${s3.toFixed(0)}`;
+    div3.append(max_temp,img3);
+
+
+
+    let div4 = document.createElement("div");
+    let img4 = document.createElement("img");
+    img4.src = "https://ak.picdn.net/shutterstock/videos/1013102030/thumb/9.jpg";
+    let  wind= document.createElement("p")
+    wind.innerText = `Wind : ${data.wind.speed} Km`;
+    div4.append(wind,img4);
+
+    let div5 = document.createElement("div");
+    let img5 = document.createElement("img");
+    img5.src = "https://toppng.com/uploads/preview/white-cloud-symbol-png-11552338912sxr5h2sxpo.png";
+    let  colud= document.createElement("p")
+    colud.innerText = `Cloud : ${data.clouds.all}`;
+    div5.append(colud,img5);
+
+    let div6 = document.createElement("div");
+    let img6 = document.createElement("img");
+    img6.src = "https://clipart.world/wp-content/uploads/2020/06/sunrise-logo.jpg";
+    let  sunrise= document.createElement("p")
+    sunrise.innerText = `Sunrise : ${data.sys.sunrise}`;
+    div6.append(sunrise,img6);
+
+    let div7 = document.createElement("div");
+    div7.style.paddingBottom = "20px";
+    let img7 = document.createElement("img");
+    img7.src = "https://www.creativefabrica.com/wp-content/uploads/2020/02/10/Sunset-Logo-Graphics-1.jpg";
+    let  sunset= document.createElement("p")
+    sunset.innerText = `Sunset : ${data.sys.sunset}`;
+    div7.append(sunset,img7);
+
+
+
+
+
+    container.append(name,div1,div2,div3,div4,div5,div6,div7);
+
+    let map = document.getElementById("gmap_canvas");
+    map.src = url;
+
+    
+}
+
+
+
+function forcast(data){
+//   data.forEach(function(elm){
+//     // let res = elm.weather;
+//     // console.log(res[0].main);
+//     // console.log(elm);
+
+//     let div = document.createElement("div");
+    
+
+   
+// })
+
+  let contain = document.getElementById("forcast");
+  contain.innerHTML = "";
+
+  for(let i=0;i<7;i++){
+    // console.log(data[i]);
+
+    let div = document.createElement("div");
+    let name = document.createElement("h2");
+    if(i == 0){
+      name.innerText = "Mon";
+    }
+    else if(i == 1){
+      name.innerText = "Tue";
+    }
+    else if(i == 2){
+      name.innerText = "Wed";
+    }
+    else if(i == 3){
+      name.innerText = "Thur";
+    }
+    else if(i == 4){
+      name.innerText = "Fri";
+    }
+    else if(i == 5){
+      name.innerText = "Sat";
+    }
+    else if(i == 6){
+      name.innerText = "Sun";
+    }
+    let seen = data[i].weather[0].main;
+    let img = document.createElement("img");
+    if(seen == "Clouds"){
+      img.src = "https://yastatic.net/weather/i/icons/funky/dark/bkn_d.svg";
+    }
+    else if(seen == "Rain"){
+      img.src = "https://yastatic.net/weather/i/icons/funky/dark/ovc_ra.svg";
+    }
+    else if(seen == "Sunny"){
+      img.src = "https://yastatic.net/weather/i/icons/funky/dark/skc_d.svg";
+    }
+
+
+    let min_temp = document.createElement("p");
+    let cel1 = data[i].main.temp_max;
+    let sum1 = cel1-273.15;
+    min_temp.innerText = `${sum1.toFixed(0)} C`;
+    
+    let max_temp = document.createElement("p");
+    let cel2 = data[i].main.temp_min;
+    let sum2 = cel2 - 273.15;
+    max_temp.innerText = `${sum2.toFixed(0)} C`;
+
+
+    div.append(name,img,min_temp,max_temp);
+    contain.append(div);
+  }
+  
+}
+
+
+function getlocation(){
+    navigator.geolocation.getCurrentPosition(success);
+
+    function success(pos) {
+  const crd = pos.coords;
+
+  console.log('Your current position is:');
+  console.log(`Latitude : ${crd.latitude}`);
+  console.log(`Longitude: ${crd.longitude}`);
+  console.log(`More or less ${crd.accuracy} meters.`);
+  getWetherLocation(crd.latitude , crd.longitude);
+}
+
+}
+
+function getWetherLocation(lat,lon){
+    let url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=c7a9024c6b549ea766855f96c3bd4754&lang={lang}`
+
+    fetch(url)
+      .then(function (res) {
+        return res.json();
+      })
+      .then(function (res) {
+        console.log(res);
+        display(res);
+        // forcast(res);
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
+
+}
+
+
+
+
+</script>
